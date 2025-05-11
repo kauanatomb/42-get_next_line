@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktombola <ktombola@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 12:40:08 by ktombola          #+#    #+#             */
-/*   Updated: 2025/05/03 17:17:01 by ktombola         ###   ########.fr       */
+/*   Created: 2025/05/06 16:20:41 by ktombola          #+#    #+#             */
+/*   Updated: 2025/05/06 16:21:04 by ktombola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*fill_stash(int fd, char *stash);
 static char	*extract_line(char *stash);
@@ -18,16 +18,16 @@ static char	*clear_stash(char *stash);
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*stash[MAX_FD];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	stash = fill_stash(fd, stash);
-	if (!stash)
+	stash[fd] = fill_stash(fd, stash[fd]);
+	if (!stash[fd])
 		return (NULL);
-	line = extract_line(stash);
-	stash = clear_stash(stash);
+	line = extract_line(stash[fd]);
+	stash[fd] = clear_stash(stash[fd]);
 	return (line);
 }
 

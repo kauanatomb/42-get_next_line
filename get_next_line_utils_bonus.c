@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktombola <ktombola@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/03 16:11:50 by ktombola          #+#    #+#             */
-/*   Updated: 2025/05/04 13:01:04 by ktombola         ###   ########.fr       */
+/*   Created: 2025/05/06 16:21:22 by ktombola          #+#    #+#             */
+/*   Updated: 2025/05/06 16:21:54 by ktombola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strjoin(const char *s1, const char *s2)
 {
