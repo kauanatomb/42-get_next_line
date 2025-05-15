@@ -72,10 +72,8 @@ static char	*extract_line(char *stash)
 
 	i = 0;
 	j = 0;
-	if (!stash)
+	if (!stash || stash[0] == '\0')
 		return (NULL);
-	if (stash[0] == '\0')
-		return ((free(stash)), NULL);
 	while (stash[i] != '\0' && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\n')
