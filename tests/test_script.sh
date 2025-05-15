@@ -16,7 +16,7 @@ do
     
     cc -Wall -Wextra -Werror -D BUFFER_SIZE=$bs $SOURCE_FILES -o test
     
-    leaks --atExit -- ./test
+    valgrind --leak-check=full ./test
 
     echo
 done

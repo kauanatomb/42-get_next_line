@@ -22,7 +22,12 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		if (stash)
+			free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	stash[fd] = fill_stash(fd, stash[fd]);
 	if (!stash[fd])
 		return (NULL);
@@ -67,15 +72,17 @@ static char	*extract_line(char *stash)
 
 	i = 0;
 	j = 0;
-	if (!stash || stash[0] == '\0')
+	if (!stash)
 		return (NULL);
+	if (stash[0] == '\0')
+		return ((free(stash)), NULL);
 	while (stash[i] != '\0' && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\n')
 		i++;
 	line = (char *)malloc(i + 1);
 	if (!line)
-		return (NULL);
+		return ((free(stash)), NULL);
 	while (i > j)
 	{
 		line[j] = stash[j];
@@ -105,7 +112,7 @@ static char	*clear_stash(char *stash)
 	remainder_len = ft_strlen(stash + ++i);
 	new_stash = (char *)malloc(remainder_len + 1);
 	if (!new_stash)
-		return (NULL);
+		return ((free(stash)), NULL);
 	j = 0;
 	while (stash[i])
 		new_stash[j++] = stash[i++];
