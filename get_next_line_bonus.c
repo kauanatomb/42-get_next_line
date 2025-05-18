@@ -13,7 +13,7 @@
 #include "get_next_line_bonus.h"
 
 static char	*fill_stash(int fd, char *stash);
-static char	*extract_line(char *stash);
+static char	*extract_line(const char *stash);
 static char	*clear_stash(char *stash);
 
 char	*get_next_line(int fd)
@@ -22,12 +22,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0)
-	{
-		if (stash[fd])
-			free(stash[fd]);
-		stash[fd] = NULL;
 		return (NULL);
-	}
 	stash[fd] = fill_stash(fd, stash[fd]);
 	if (!stash[fd])
 		return (NULL);
@@ -40,9 +35,8 @@ static char	*fill_stash(int fd, char *stash)
 {
 	char	*buffer;
 	int		bytes_read;
-	char	*tmp;
 
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
@@ -50,21 +44,16 @@ static char	*fill_stash(int fd, char *stash)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
-		{
-			free(buffer);
-			free(stash);
-			return (NULL);
-		}
+			return (free(buffer), free(stash), NULL);
 		buffer[bytes_read] = '\0';
-		tmp = stash;
-		stash = ft_strjoin(tmp, buffer);
-		free(tmp);
+		stash = ft_strjoin_and_free(stash, buffer);
+		if (!stash)
+			return (free(buffer), NULL);
 	}
-	free(buffer);
-	return (stash);
+	return (free(buffer), stash);
 }
 
-static char	*extract_line(char *stash)
+static char	*extract_line(const char *stash)
 {
 	int		i;
 	int		j;
@@ -78,9 +67,9 @@ static char	*extract_line(char *stash)
 		i++;
 	if (stash[i] == '\n')
 		i++;
-	line = (char *)malloc(i + 1);
+	line = malloc(i + 1);
 	if (!line)
-		return ((free(stash)), NULL);
+		return (NULL);
 	while (i > j)
 	{
 		line[j] = stash[j];
@@ -103,12 +92,9 @@ static char	*clear_stash(char *stash)
 	while (stash[i] != '\0' && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\0')
-	{
-		free(stash);
-		return (NULL);
-	}
+		return (free(stash), NULL);
 	remainder_len = ft_strlen(stash + ++i);
-	new_stash = (char *)malloc(remainder_len + 1);
+	new_stash = malloc(remainder_len + 1);
 	if (!new_stash)
 		return ((free(stash)), NULL);
 	j = 0;
