@@ -12,7 +12,33 @@
 
 #include "get_next_line.h"
 
-char	*ft_strjoin(const char *s1, const char *s2)
+static char	*ft_strcpy(char *dest, const char *src)
+{
+	int	i;
+
+	i = 0;
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+static char	*ft_strdup(const char *s1)
+{
+	char	*dest;
+
+	if (!s1)
+		return (NULL);
+	dest = malloc(ft_strlen(s1) + 1);
+	if (!dest)
+		return (NULL);
+	return (ft_strcpy(dest, s1));
+}
+
+char	*ft_strjoin_and_free(char *s1, const char *s2)
 {
 	char	*res;
 	int		i;
@@ -21,16 +47,19 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	i = 0;
 	j = 0;
 	if (!s1)
-		s1 = "";
-	res = (char *) malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+		s1 = ft_strdup("");
+	if (!s1 || !s2)
+		return (free(s1), NULL);
+	res = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!res)
-		return (NULL);
+		return (free(s1), NULL);
 	while (s1[i])
 		res[j++] = s1[i++];
 	i = 0;
 	while (s2[i])
 		res[j++] = s2[i++];
 	res[j] = '\0';
+	free(s1);
 	return (res);
 }
 
@@ -58,6 +87,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i])
 		i++;
